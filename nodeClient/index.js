@@ -1,6 +1,35 @@
 let os = require("os");
 let cpus = os.cpus();
+let io = require("socket.io-client");
+let socket = io("http://127.0.0.1:8000");
+socket.on("connect", function () {
+  //here we need a unique id for each machine and the best thing is the MAC address so we use the os.interfaces to get a MAC addr
+  //and we need to find one that is not internal (internal:false)
+  let networkInterfaces = os.networkInterfaces();
+  let macAddress;
+  for (let interface in networkInterfaces) {
+    networkInterfaces[interface].forEach((NI) => {
+      if (!NI.internal) {
+        macAddress = NI.mac;
+        return;
+      }
+    });
+  }
+  //we also want to emit an auth event because we need a way to find out which is NodeClient and which is React Client later
+  socket.emit("clientAuth", "werewolf");
 
+  let perfDataInterval = setInterval(async () => {
+    let data = await performanceData();
+    data["macAddress"] = macAddress;
+    //each second we emit to server the realtime data
+    socket.emit("perfData", data);
+  }, 1000);
+
+  //if the socket gets disconnect we need to remove the listeners otherwise its going to have multiple events emit to our server each time the socket is restart
+  socket.on("disconnect", () => {
+    clearInterval(perfDataInterval);
+  });
+});
 async function performanceData() {
   return new Promise(async (resolve, reject) => {
     //type of os
