@@ -16,8 +16,12 @@ socket.on("connect", function () {
     });
   }
   //we also want to emit an auth event because we need a way to find out which is NodeClient and which is React Client later
-  socket.emit("clientAuth", "werewolf");
-
+  socket.emit("clientAuth", "nodeClient");
+  //here we first emit the data as initPerfData to save the machine into db
+  performanceData().then((value) => {
+    value.macAddress = macAddress;
+    socket.emit("initPerfData", value);
+  });
   let perfDataInterval = setInterval(async () => {
     let data = await performanceData();
     data["macAddress"] = macAddress;

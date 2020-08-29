@@ -1,24 +1,28 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect, useState } from "react";
+import "./App.css";
+import socket from "./utils/socketConnection";
+import Widget from "./components/Widget";
 
 function App() {
+  let [perfData, setPerfData] = useState({});
+  useEffect(() => {
+    socket.emit("clientAuth", "uiClient");
+  }, []);
+  //get data
+  useEffect(() => {
+    socket.on("data", (data) => {
+      setPerfData({ ...perfData, [data.macAddress]: data });
+    });
+  }, [perfData]);
+  let renderWidgets = () => {
+    return Object.values(perfData).map((widget) => {
+      return <Widget key={widget.macAddress} data={widget} />;
+    });
+  };
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <h1>Wolf is Here</h1>
+      {renderWidgets()}
     </div>
   );
 }
