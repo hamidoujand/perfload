@@ -1,30 +1,28 @@
-import React, { useEffect, useState } from "react";
-import "./App.css";
-import socket from "./utils/socketConnection";
-import Widget from "./components/Widget";
+import React from "react";
+import socket from "./utils/socket";
 
-function App() {
-  let [perfData, setPerfData] = useState({});
-  useEffect(() => {
-    socket.emit("clientAuth", "uiClient");
-  }, []);
-  //get data
-  useEffect(() => {
-    socket.on("data", (data) => {
-      setPerfData({ ...perfData, [data.macAddress]: data });
-    });
-  }, [perfData]);
-  let renderWidgets = () => {
-    return Object.values(perfData).map((widget) => {
-      return <Widget key={widget.macAddress} data={widget} />;
-    });
+import Widget from "./components/Widget/Widget";
+
+class App extends React.Component {
+  state = {
+    perfData: {},
   };
-  return (
-    <div className="App">
-      <h1>Wolf is Here</h1>
-      {renderWidgets()}
-    </div>
-  );
+  componentDidMount() {
+    socket.emit("clientAuth", "uiClient");
+    socket.on("data", (data) => {
+      this.setState({ perfData: { [data.macAddress]: data } });
+    });
+  }
+
+  renderWidgets() {
+    return Object.values(this.state.perfData).map((data) => (
+      <Widget key={data.macAddress} data={data} />
+    ));
+  }
+
+  render() {
+    return <div className="container">{this.renderWidgets()}</div>;
+  }
 }
 
 export default App;

@@ -41,7 +41,7 @@ if (cluster.isMaster) {
     //here we send the sticky session and the connection and this part make sure the connection and worker always find each other
     worker.send("sticky-session:connection", connection);
   });
-  server.listen(8000);
+  server.listen(8000, "0.0.0.0");
 } else {
   let app = express();
   //we are going to listen to port 0 because we  do not expose our express server this only for getting io to work

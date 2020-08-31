@@ -1,0 +1,26 @@
+{
+  "name": "perfload",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start:nodeClient": "npm start --prefix ./nodeClient",
+    "start:client": "npm start --prefix ./client",
+    "start:server": "npm start --prefix ./server",
+    "start": "concurrently npm:start:*"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hmdrzaa11/perfload.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/hmdrzaa11/perfload/issues"
+  },
+  "homepage": "https://github.com/hmdrzaa11/perfload#readme",
+  "devDependencies": {
+    "concurrently": "^5.3.0"
+  }
+}

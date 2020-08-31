@@ -55,6 +55,7 @@ async function performanceData() {
 
     let cpuLoad = await getCpuLoad();
     //we pass all data
+    let isActive = true;
     resolve({
       freeMem,
       totalMem,
@@ -65,6 +66,7 @@ async function performanceData() {
       numCores,
       uptime,
       cpuLoad,
+      isActive,
     });
   });
 }
