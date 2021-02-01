@@ -1,6 +1,7 @@
 body {
   background-color: #2d4059;
   min-height: 100vh;
+  font-family: "Londrina Solid", Arial, Helvetica, sans-serif;
 }
 .container {
   color: rebeccapurple;
